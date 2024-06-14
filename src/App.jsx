@@ -9,11 +9,11 @@ function App() {
     productName: "Focus Bear",
     productVersion: "1.0.0",
     companyName: "Arism Lab",
-    loaderUrl: "src/assets/BuildGame.loader.js",
-    dataUrl: "src/assets/BuildGame.data.unityweb",
-    frameworkUrl: "src/assets/BuildGame.framework.js.unityweb",
-    codeUrl: "src/assets/BuildGame.wasm.unityweb",
-    streamingAssetsUrl: "src/StreamingAssets",
+    loaderUrl: "assets/BuildGame.loader.js",
+    dataUrl: "assets/BuildGame.data.unityweb",
+    frameworkUrl: "assets/BuildGame.framework.js.unityweb",
+    codeUrl: "assets/BuildGame.wasm.unityweb",
+    streamingAssetsUrl: "StreamingAssets",
   });
 
   const [devicePixelRatio, setDevicePixelRatio] = useState(

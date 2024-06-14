@@ -2,7 +2,7 @@ import { Telegraf, Markup } from "telegraf";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const TOKEN = import.meta.env.BOT_TOKEN;
+const TOKEN = process.env.BOT_TOKEN;
 const bot = new Telegraf(TOKEN,  { telegram: { testEnv: true }});
 
 const web_link = "https://arismlab.github.io/focusbear/";
