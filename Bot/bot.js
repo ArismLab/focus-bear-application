@@ -2,10 +2,10 @@ import { Telegraf, Markup } from "telegraf";
 import dotenv from 'dotenv';
 dotenv.config();
 
-const TOKEN = process.env.BOT_TOKEN;
+const TOKEN = import.meta.env.BOT_TOKEN;
 const bot = new Telegraf(TOKEN,  { telegram: { testEnv: true }});
 
-const web_link = "http://localhost:5173/";
+const web_link = "https://arismlab.github.io/focusbear/";
 
 // bot.start((ctx) =>
 //   ctx.reply("Launch App", {
