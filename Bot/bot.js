@@ -5,7 +5,7 @@ dotenv.config();
 const TOKEN = process.env.BOT_TOKEN;
 const bot = new Telegraf(TOKEN,  { telegram: { testEnv: true }});
 
-const web_link = "https://arismlab.github.io/focusbear/";
+const web_link = "https://arismlab.github.io/focus-bear-application/";
 
 // bot.start((ctx) =>
 //   ctx.reply("Launch App", {
