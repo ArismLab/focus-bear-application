@@ -3,7 +3,8 @@
 ## Introduction
 Welcome to the official roadmap for [Focus Bear]. This document outlines the key milestones and development phases for our GameFi application. Our goal is to provide a transparent and comprehensive view of our progress and future plans.
 
-![image](https://github.com/ArismLab/focus-game/assets/81000282/f176cc1e-22b9-4674-bf3b-8df9dbe0fd44)
+<img width="3912" alt="FocusBearNew" src="https://github.com/user-attachments/assets/7f909471-c233-4029-8c3d-b4c79f792218">
+
 ---
 ## Q1 2024 - Initial Development Phase
 - **Project Inception**
