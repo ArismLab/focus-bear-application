@@ -66,7 +66,7 @@ Welcome to the official roadmap for [Focus Bear]. This document outlines the key
   - Optimize smart contracts for mainnet deployment
 
 - **Mainnet Launch**
-  - Launch date: June 16th, 2024 (TBE)
+  - Launch date: August 16th, 2024 (TBE)
   - Deploy smart contracts on the mainnet
   - Launch the full version of the game
   - Execute extensive marketing campaign
