@@ -5,7 +5,7 @@ const useCreateUser = () => {
   const [error, setError] = useState(null);
   const [newUser, setNewUser] = useState(null);
 
-  const createUser = useCallback(async (refId, argentAddress) => {
+  const createUser = useCallback(async (refId, beraAddress) => {
     setLoading(true);
     setError(null);
     try {
@@ -14,7 +14,7 @@ const useCreateUser = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refId, address: argentAddress }),
+        body: JSON.stringify({ refId, address: beraAddress }),
       });
       if (!response.ok) {
         throw new Error('Failed to create user');
