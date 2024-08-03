@@ -1,99 +1,64 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { Unity, useUnityContext } from "react-unity-webgl";
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import { Unity, useUnityContext } from 'react-unity-webgl';
+import './App.css';
+import { TESTNET_URL } from './helper/constants';
+import useTelegram from './hook/useTelegram';
+import useMint from './hook/useMint';
+import { ethers } from 'ethers';
+import CustomLoadingBar from './components/CustomLoadingBar';
 
-const telegram = window.Telegram.WebApp;
+const provider = new ethers.JsonRpcProvider(`${TESTNET_URL}`);
 
 function App() {
-  const [accessGranted, setAccessGranted] = useState(false);
-  const [keyAuthorized, setKeyAuthorized] = useState("");
-
-  const { unityProvider, isLoaded, loadingProgression, addEventListener, removeEventListener, sendMessage } = useUnityContext({
-    productName: "Focus Bear",
-    productVersion: "1.0.0",
-    companyName: "Arism Lab",
-    loaderUrl: "assets/BuildGame.loader.js",
-    dataUrl: "assets/BuildGame.data.unityweb",
-    frameworkUrl: "assets/BuildGame.framework.js.unityweb",
-    codeUrl: "assets/BuildGame.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
+  const {
+    unityProvider,
+    isLoaded,
+    loadingProgression,
+    addEventListener,
+    removeEventListener,
+    sendMessage,
+  } = useUnityContext({
+    productName: 'Focus Bear',
+    productVersion: '1.0.0',
+    companyName: 'Arism Lab',
+    loaderUrl: 'assets/BuildGame.loader.js',
+    dataUrl: 'assets/BuildGame.data.unityweb',
+    frameworkUrl: 'assets/BuildGame.framework.js.unityweb',
+    codeUrl: 'assets/BuildGame.wasm.unityweb',
+    streamingAssetsUrl: 'StreamingAssets',
   });
 
-  const [devicePixelRatio, setDevicePixelRatio] = useState(
-    window.devicePixelRatio
-  );
+  const { accessGranted, handleCreateWallet, handleExportKey, setBeraAddress, beraAddress } = useTelegram(sendMessage);
+  const { handleMint } = useMint();
 
-  const handleCreateWallet = useCallback(() => {
-    const params = {
-      reason: "Securely store your private key using biometric authentication"
+  const [devicePixelRatio, setDevicePixelRatio] = useState(window.devicePixelRatio);
+
+  // Mint Event Listener
+  useEffect(() => {
+    addEventListener('OnMintButtonClicked', handleMint);
+    return () => {
+      removeEventListener('OnMintButtonClicked', handleMint);
     };
-  
-    telegram.BiometricManager.requestAccess(params, (isAccessGranted) => {
-      if (isAccessGranted) {
-        telegram.MainButton.text = "Access Granted " + telegram.BiometricManager.isInited + " " + telegram.BiometricManager.isBiometricAvailable;
-        setAccessGranted(true);
-        
-        // Proceed with authentication
-        telegram.BiometricManager.authenticate({ reason: 'Authenticate to store private key' }, (isAuthenticated, biometricToken) => {
-          if (isAuthenticated) {
-            const privateKey = 'your-private-key-here'; // Replace with your actual private key
-            
-            // Store the private key using the biometric token
-            telegram.BiometricManager.updateBiometricToken(privateKey, (isUpdated) => {
-              if (isUpdated) {
-                telegram.MainButton.text = 'Private key: ' + biometricToken;
-              } else {
-                telegram.MainButton.text = 'Failed to store the private key.';
-              }
-            });
-          } else {
-            console.error('Authentication failed.');
-          }
-        });
-  
-      } else {
-        telegram.MainButton.text = "Access Denied " + telegram.BiometricManager.isInited + " " + telegram.BiometricManager.isBiometricAvailable;
-        setAccessGranted(false);
-      }
-      telegram.MainButton.show();
-    });
+  }, [addEventListener, removeEventListener, handleMint]);
 
-  }, []);
-
-  const handleExportKey = useCallback(() => {  
-    telegram.BiometricManager.authenticate({ reason: 'Authenticate to get private key' }, (isAuthenticated, biometricToken) => {
-      if (isAuthenticated) {        
-        // Return the private key using the biometric token
-        const message = biometricToken.toString();
-        setKeyAuthorized(message);
-        telegram.MainButton.text = 'Private key: ' + message;
-        telegram.MainButton.show();
-      } else {
-        console.error('Authentication failed.');
-      }
-    });
-  }, []);
-
-
+  // Hide Main Screen if Access Granted
   useEffect(() => {
-    sendMessage("MainGameCanvas", "HideMainScreen");
-  }, [accessGranted]);
+    if (accessGranted && (beraAddress != "")) {
+      sendMessage('MainGameCanvas', 'HideMainScreen');
+    }
+  }, [accessGranted, beraAddress, sendMessage]);
 
-  useEffect(() => {
-    sendMessage("DialogCanvas", "SetDialogText", keyAuthorized);
-  }, [keyAuthorized]);
-
+  // Create Wallet Event Listener
   useEffect(() => {
     addEventListener('OnCreateWalletButtonClicked', handleCreateWallet);
-
     return () => {
       removeEventListener('OnCreateWalletButtonClicked', handleCreateWallet);
     };
   }, [addEventListener, removeEventListener, handleCreateWallet]);
 
+  // Export Key Event Listener
   useEffect(() => {
     addEventListener('OnExportKeyButtonClicked', handleExportKey);
-
     return () => {
       removeEventListener('OnExportKeyButtonClicked', handleExportKey);
     };
@@ -101,13 +66,6 @@ function App() {
 
   useEffect(
     function () {
-      telegram.ready();
-      telegram.isClosingConfirmationEnabled = true;
-        
-      telegram.BiometricManager.init(() => {});
-
-      // A function which will update the device pixel ratio of the Unity
-      // Application to match the device pixel ratio of the browser.
       const updateDevicePixelRatio = function () {
         setDevicePixelRatio(window.devicePixelRatio);
       };
@@ -126,27 +84,18 @@ function App() {
     },
     [devicePixelRatio]
   );
+  
 
   return (
     <div id="unity-container" className="unity-responsive">
       <Unity
         unityProvider={unityProvider}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: '100%', height: '100%' }}
         devicePixelRatio={devicePixelRatio}
       />
-      {!isLoaded && (
-        <div id="unity-loading-bar">
-          <div id="unity-logo"></div>
-          <div id="unity-progress-bar-empty">
-            <div
-              id="unity-progress-bar-full"
-              style={{ width: `${loadingProgression * 100}%` }}
-            ></div>
-          </div>
-        </div>
-      )}
+      {!isLoaded && <CustomLoadingBar progress={loadingProgression} />}
     </div>
   );
 }
 
-export default App
+export default App;

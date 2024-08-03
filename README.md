@@ -1,4 +1,4 @@
-# Focus Bear App on Starknet Blockchain - Roadmap
+# Focus Bear App on Bera Blockchain - Roadmap
 
 ## Introduction
 Welcome to the official roadmap for [Focus Bear]. This document outlines the key milestones and development phases for our GameFi application. Our goal is to provide a transparent and comprehensive view of our progress and future plans.
@@ -13,7 +13,7 @@ Welcome to the official roadmap for [Focus Bear]. This document outlines the key
 
 - **Conceptualization**
   - Game mechanics and tokenomics design
-  - Blockchain platform selection: Starknet
+  - Blockchain platform selection: Berachain
   - Preliminary smart contract development
 
 ---
